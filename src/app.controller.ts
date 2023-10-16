@@ -3,7 +3,7 @@ import { AppService } from './app.service';
 import { AuthGuard, Public, RoleGuard, Roles } from 'nest-keycloak-connect';
 
 @Controller()
-@UseGuards(AuthGuard, RoleGuard)
+//@UseGuards(AuthGuard, RoleGuard)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
@@ -19,9 +19,9 @@ export class AppController {
     return 'user';
   }
 
-  @Get()
-  @Roles({ roles: ['dev'] })
+  @Get('/admin')
+  @Roles({ roles: ['admin'] })
   teste(): string {
-    return 'ok';
+    return process.env.KC_REALM;
   }
 }

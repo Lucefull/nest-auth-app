@@ -9,13 +9,21 @@ import {
   RoleGuard,
 } from 'nest-keycloak-connect';
 import { KeycloakConfigService } from './config/keycloak-config.service';
-import { ConfigModule } from './config/config.module';
+import { KeycloakModule } from './config/keycloak.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     KeycloakConnectModule.registerAsync({
       useExisting: KeycloakConfigService,
-      imports: [ConfigModule],
+      imports: [KeycloakModule],
+    }),
+    ConfigModule.forRoot({
+      envFilePath: [
+        '.env.development.local',
+        '.env.development',
+        '.env.production',
+      ],
     }),
   ],
   controllers: [AppController],
