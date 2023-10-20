@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { APP_GUARD } from '@nestjs/core';
 import {
   AuthGuard,
@@ -11,6 +9,10 @@ import {
 import { KeycloakConfigService } from './config/keycloak-config.service';
 import { KeycloakModule } from './config/keycloak.module';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './user/user.module';
+import { User } from './user/entities/user.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,10 +27,21 @@ import { ConfigModule } from '@nestjs/config';
         '.env.production',
       ],
     }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      password: 'postgres',
+      username: 'postgres',
+      entities: [User],
+      database: 'postgres',
+      synchronize: true,
+      logging: true,
+    }),
+    UserModule,
+    AuthModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
