@@ -3,10 +3,11 @@ import { TokenDto } from './dto/token.dto';
 import { HttpException, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { error } from 'console';
+import { throws } from 'assert';
 
 @Injectable()
 export class AuthService {
-  login(login: LoginDto): Promise<Error | TokenDto> {
+  login(login: LoginDto): Promise<TokenDto> {
     return axios
       .post<TokenDto>(
         `${process.env.KC_AUTH_SERVER_URL}/realms/${process.env.KC_REALM}/protocol/openid-connect/token`,
